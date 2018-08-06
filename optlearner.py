@@ -129,30 +129,34 @@ class ProbabilityLearner(object):
 
     def plot_joint(self, cmap="BuGn"):
         """Plot the current joint distribution P(p, I)."""
+        cmap="BuGn";
         pal = sns.color_palette(cmap, 256)
         lc = pal[int(.7 * 256)]
         bg = pal[0]
-        
+
         fig = plt.figure(figsize=(7, 7))
         gs = plt.GridSpec(6, 6)
-        
+
         p_lim = self.p_grid.min(), self.p_grid.max()
         I_lim = self.I_grid.min(), self.I_grid.max()
-     
+
         ax1 = fig.add_subplot(gs[1:, :-1])
         ax1.set(xlim=p_lim, ylim=I_lim)
 
         ax1.contourf(self.p_grid, self.I_grid, self.pI.T, 30, cmap=cmap)
 
-        sns.axlabel("$p$", "$I$", size=16)
+        plt.xlabel("$p$", fontsize=16)
+        plt.ylabel("$I$", fontsize=16)
 
-        ax2 = fig.add_subplot(gs[1:, -1], axis_bgcolor=bg)
+        ax2 = fig.add_subplot(gs[1:, -1])
+        ax2.set_facecolor(bg)
         ax2.set(ylim=I_lim)
         ax2.plot(self.pI.sum(axis=0), self.I_grid, c=lc, lw=3)
         ax2.set_xticks([])
         ax2.set_yticks([])
 
-        ax3 = fig.add_subplot(gs[0, :-1], axis_bgcolor=bg)
+        ax3 = fig.add_subplot(gs[0, :-1])
+        ax3.set_facecolor(bg)
         ax3.set(xlim=p_lim)
         ax3.plot(self.p_grid, self.pI.sum(axis=1), c=lc, lw=3)
         ax3.set_xticks([])
@@ -171,16 +175,14 @@ class ProbabilityLearner(object):
         pgm.add_node(daft.Node("yim1", r"$y_{i-1}$", .5, .5, scale, observed=True))
         pgm.add_node(daft.Node("yi", r"$y_i$", 2.5, .5, scale, observed=True))
 
-        kws = {"plot_params": {"ec": gray, "fc": gray}}
-        pgm.add_edge("v", "pim1", **kws)
-        pgm.add_edge("v", "pi", **kws)
-        pgm.add_edge("pim1", "pi", **kws)
-        pgm.add_edge("pim1", "yim1", **kws)
-        pgm.add_edge("pi", "yi", **kws)
+        pgm.add_edge("v", "pim1")
+        pgm.add_edge("v", "pi")
+        pgm.add_edge("pim1", "pi")
+        pgm.add_edge("pim1", "yim1")
+        pgm.add_edge("pi", "yi")
 
         pgm.render()
         return pgm
-
 
 class VolatilityLearner(ProbabilityLearner):
 
