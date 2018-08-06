@@ -1,3 +1,8 @@
+# Changes:
+
+This is a clone from https://github.com/mwaskom/optlearner with a small number of changes to make it work with current versions of various libraries.
+
+# Original
 Bayesian probability learners
 =============================
 
