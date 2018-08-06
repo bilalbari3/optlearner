@@ -320,15 +320,14 @@ class VolatilityLearner(ProbabilityLearner):
         pgm.add_node(daft.Node("yim1", r"$y_{i-1}$", 1, .5, scale, observed=True))
         pgm.add_node(daft.Node("yi", r"$y_i$", 3, .5, scale, observed=True))
 
-        kws = {"plot_params": {"ec": gray, "fc": gray}}
-        pgm.add_edge("k", "vim1", **kws)
-        pgm.add_edge("k", "vi", **kws)
-        pgm.add_edge("vim1", "pim1", **kws)
-        pgm.add_edge("vi", "pi", **kws)
-        pgm.add_edge("vim1", "vi", **kws)
-        pgm.add_edge("pim1", "pi", **kws)
-        pgm.add_edge("pim1", "yim1", **kws)
-        pgm.add_edge("pi", "yi", **kws)
+        pgm.add_edge("k", "vim1")
+        pgm.add_edge("k", "vi")
+        pgm.add_edge("vim1", "pim1")
+        pgm.add_edge("vi", "pi")
+        pgm.add_edge("vim1", "vi")
+        pgm.add_edge("pim1", "pi")
+        pgm.add_edge("pim1", "yim1")
+        pgm.add_edge("pi", "yi")
 
         pgm.render()
         return pgm
@@ -350,8 +349,10 @@ def I_trans_func(I_p1, I, k):
 
 def p_trans_func(p_p1, p, I_p1):
     """p_p1 is beta with mean p and precision I_p1."""
-    a = 1 + exp(I_p1) * p
-    b = 1 + exp(I_p1) * (1 - p)
+    #a = 1 + exp(I_p1) * p
+    #b = 1 + exp(I_p1) * (1 - p)
+    a = exp(I_p1) * p
+    b = exp(I_p1) * (1 - p)
 
     if 0 < p_p1 < 1:
         logkerna = (a - 1) * log(p_p1)
